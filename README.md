@@ -1,50 +1,78 @@
-# Welcome to your Expo app 👋
+# Sunny Dev Entry Homework
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+구글 스프레드시트 CSV 데이터를 가져와 화면에 표시하고, Refresh 버튼으로 재조회할 수 있는 간단한 Expo 앱입니다.
 
-## Get started
+## 데모 GIF
 
-1. Install dependencies
+![Demo](./demo.gif)
 
-   ```bash
-   npm install
-   ```
+## 주요 기능
 
-2. Start the app
+1. 앱 진입 시 스프레드시트 CSV 데이터를 자동 조회합니다.
+2. 조회 결과를 리스트로 렌더링합니다.
+3. `Refresh` 버튼으로 수동 재조회가 가능합니다.
+4. 조회 실패 시 에러 메시지를 화면에 표시합니다.
+5. 재조회 중 버튼을 비활성화해 중복 요청을 방지합니다.
 
-   ```bash
-   npx expo start
-   ```
+## 데이터 소스
 
-In the output, you'll find options to open the app in a
+- Google Sheets CSV Export URL을 `fetch`로 호출합니다.
+- 현재 코드는 `B2:B4` 범위를 CSV로 받아옵니다.
+- 파싱은 줄바꿈(`\n`) 기준 split으로 단순 처리합니다.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+`fetchSheetData`는 CSV를 고급 파싱하지 않고 줄 단위 문자열 배열로 변환합니다.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 실행 방법
 
-## Get a fresh project
-
-When you're ready, run:
+### 1) 의존성 설치
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2) 개발 서버 시작
 
-## Learn more
+```bash
+npm run start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3) 플랫폼별 실행
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm run android
+npm run ios
+npm run web
+```
 
-## Join the community
+## 주요 스크립트
 
-Join our community of developers creating universal apps.
+- `npm run start`: Expo 개발 서버 실행
+- `npm run android`: Android에서 앱 실행
+- `npm run ios`: iOS 시뮬레이터에서 앱 실행
+- `npm run web`: 웹에서 앱 실행
+- `npm run emulator`: Android Emulator 실행 스크립트 (`scripts/start-emulator.sh`)
+- `npm run lint`: ESLint 실행
+- `npm run reset-project`: Expo 기본 리셋 스크립트 실행
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 프로젝트 구조
+
+```text
+app/
+  _layout.tsx
+  index.tsx
+scripts/
+  reset-project.js
+  start-emulator.sh
+```
+
+## 구현 포인트
+
+1. `useSheetData` 커스텀 훅으로 데이터 조회 상태(`isLoading`, `isFetching`, `error`)를 분리했습니다.
+2. `refetch`를 `useCallback`으로 관리해 재사용 가능한 갱신 함수를 제공합니다.
+3. 초기 로딩과 수동 갱신 흐름을 동일한 로직으로 처리합니다.
+
+## 참고 파일
+
+- 화면/로직: `app/index.tsx`
+- 라우트 레이아웃: `app/_layout.tsx`
+- 에뮬레이터 스크립트: `scripts/start-emulator.sh`
